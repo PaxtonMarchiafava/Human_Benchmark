@@ -1,7 +1,3 @@
-/*
- * Scores are super hit and miss. Highest I have gotten is 92, but sometimes stops at 30.
- */
-
 package main;
 
 import java.awt.AWTException;
@@ -12,8 +8,6 @@ import java.awt.image.BufferedImage;
 
 
 public class SequenceMemory {
-	
-	final static int score = 60;
 	
 	final static int startx = 675;
 	final static int starty = 565;
@@ -36,7 +30,7 @@ public class SequenceMemory {
 		robot.mouseMove(startx, starty + 100);
 		Thread.sleep(1000);
 		
-		for (int i = 0; i < score; i++) {
+		while (true) {
 			
 			byte tempArray [] = new byte[pattern.length + 1]; // lengthen array
 			for (int k = 0; k < pattern.length; k++) {
@@ -46,38 +40,50 @@ public class SequenceMemory {
 			 
 			for (int j = 0; j < pattern.length; j++) { // for every number of the pattern length
 				
-				Thread.sleep(480); // This delay makes sure that it always captures the right lit up square at the right time. If it captures the same square twice in a row, make this delay longer
-				
-				temp = robot.createScreenCapture(captureArea);
-				
-				if ((temp.getRGB(5, 5) & 0x00ff0000 >> 16) > 200) { // record what square lit up
-					pattern[j] = 1;
-				}else if((temp.getRGB(100, 5) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 2;
-				}else if((temp.getRGB(220, 5) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 3;
-				}else if ((temp.getRGB(5, 150) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 4;
-				}else if((temp.getRGB(100, 150) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 5;
-				}else if((temp.getRGB(220, 150) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 6;
-				}else if ((temp.getRGB(5, 240) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 7;
-				}else if((temp.getRGB(100, 240) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 8;
-				}else if((temp.getRGB(220, 240) & 0x00ff0000 >> 16) > 200) {
-					pattern[j] = 9;
+				try {
+					do {
+
+						Thread.sleep(100);
+
+						temp = robot.createScreenCapture(captureArea);
+
+						if ((temp.getRGB(5, 5) & 0x00ff0000 >> 16) > 200) { // record what square lit up
+							pattern[j] = 1;
+						} else if ((temp.getRGB(100, 5) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 2;
+						} else if ((temp.getRGB(220, 5) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 3;
+						} else if ((temp.getRGB(5, 150) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 4;
+						} else if ((temp.getRGB(100, 150) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 5;
+						} else if ((temp.getRGB(220, 150) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 6;
+						} else if ((temp.getRGB(5, 240) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 7;
+						} else if ((temp.getRGB(100, 240) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 8;
+						} else if ((temp.getRGB(220, 240) & 0x00ff0000 >> 16) > 200) {
+							pattern[j] = 9;
+						}
+
+						
+
+					} while (pattern[j] == pattern[j - 1]);
+				} catch (Exception e) {
+					// try is only used when getting the first value, so there is no need to have any code here. The 1st value is always read successfully
 				}
 				
-				//System.out.print(pattern[j] + ", "); // just to monitor data, not essential
+				System.out.print(pattern[j] + ", "); // just to monitor data, not essential
+				
 			}
 			System.out.println();
 			
 			Thread.sleep(500);
+			
 			for (int j = 0; j < pattern.length; j++) {
 				
-				Thread.sleep(100);
+				Thread.sleep(70);
 
 				switch (pattern[j]) { // move to tile location
 				case 1:
@@ -125,7 +131,7 @@ public class SequenceMemory {
 				robot.mouseRelease(mouseButton);
 			}
 			
-			Thread.sleep(950);
+			Thread.sleep(950); // after clicking, wait
 			
 		}
 	}
